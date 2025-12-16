@@ -1,12 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Suspense, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Lock, ArrowLeft, CheckCircle2, AlertTriangle } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 
-export default function ResetPasswordPage() {
+function ResetPasswordInner() {
   const sp = useSearchParams();
   const token = useMemo(() => sp.get("token") || "", [sp]);
 
@@ -139,5 +139,19 @@ export default function ResetPasswordPage() {
         </div>
       </section>
     </div>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="bg-bg min-h-screen flex items-center justify-center text-gray-300 text-sm">
+          Loading…
+        </div>
+      }
+    >
+      <ResetPasswordInner />
+    </Suspense>
   );
 }
