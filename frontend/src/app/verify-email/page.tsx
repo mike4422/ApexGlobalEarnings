@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+// ✅ FIX: remove useSearchParams (breaks static export prerender)
 import Link from "next/link";
 import { CheckCircle2, XCircle, Loader2 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
@@ -9,10 +9,19 @@ import { apiFetch } from "@/lib/api";
 type Status = "idle" | "loading" | "success" | "error";
 
 export default function VerifyEmailPage() {
-  const searchParams = useSearchParams();
-  const token = searchParams.get("token") || "";
+  // ✅ FIX: read token from window.location after mount
+  const [token, setToken] = useState<string>("");
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState<string>("");
+
+  useEffect(() => {
+    try {
+      const sp = new URLSearchParams(window.location.search);
+      setToken((sp.get("token") || "").trim());
+    } catch {
+      setToken("");
+    }
+  }, []);
 
   useEffect(() => {
     async function verify() {
@@ -26,7 +35,9 @@ export default function VerifyEmailPage() {
       setMessage("");
 
       try {
-        const data = await apiFetch(`/api/auth/verify-email?token=${encodeURIComponent(token)}`);
+        const data = await apiFetch(
+          `/api/auth/verify-email?token=${encodeURIComponent(token)}`
+        );
         setStatus("success");
         setMessage(data.message || "Email verified successfully.");
       } catch (err: any) {
@@ -59,9 +70,7 @@ export default function VerifyEmailPage() {
               {isSuccess && (
                 <CheckCircle2 className="h-10 w-10 text-accentGreen" />
               )}
-              {isError && (
-                <XCircle className="h-10 w-10 text-red-500" />
-              )}
+              {isError && <XCircle className="h-10 w-10 text-red-500" />}
             </div>
 
             {/* Title */}
@@ -97,8 +106,8 @@ export default function VerifyEmailPage() {
             {/* Extra hint */}
             {isError && (
               <p className="mt-4 text-[11px] text-gray-500">
-                If this link has expired, sign in and request a new verification email
-                from your dashboard.
+                If this link has expired, sign in and request a new verification
+                email from your dashboard.
               </p>
             )}
           </div>

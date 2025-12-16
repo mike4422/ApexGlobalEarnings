@@ -2,18 +2,26 @@
 
 import { Mail, Lock, User, ShieldCheck } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
 
-  const searchParams = useSearchParams();
-  const refFromUrl =
-    (searchParams.get("ref") ||
-      searchParams.get("code") ||
-      searchParams.get("referralCode") ||
-      "")?.trim();
+  // ✅ FIX: avoid useSearchParams (can break static export prerender)
+  const [refFromUrl, setRefFromUrl] = useState("");
+  useEffect(() => {
+    try {
+      const sp = new URLSearchParams(window.location.search);
+      const ref =
+        (sp.get("ref") ||
+          sp.get("code") ||
+          sp.get("referralCode") ||
+          "")?.trim() || "";
+      setRefFromUrl(ref);
+    } catch {
+      // ignore
+    }
+  }, []);
 
   // ✅ NEW: modern toast popup
   const [toast, setToast] = useState<{
@@ -72,7 +80,11 @@ export default function RegisterPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        showToast("error", "Registration failed", data.error || "Registration failed");
+        showToast(
+          "error",
+          "Registration failed",
+          data.error || "Registration failed"
+        );
         setLoading(false);
         return;
       }
@@ -127,13 +139,17 @@ export default function RegisterPage() {
                 <p
                   className={[
                     "text-sm font-semibold",
-                    toast.type === "success" ? "text-emerald-100" : "text-red-100",
+                    toast.type === "success"
+                      ? "text-emerald-100"
+                      : "text-red-100",
                   ].join(" ")}
                 >
                   {toast.title}
                 </p>
                 {toast.message && (
-                  <p className="mt-1 text-[12px] text-gray-300/90">{toast.message}</p>
+                  <p className="mt-1 text-[12px] text-gray-300/90">
+                    {toast.message}
+                  </p>
                 )}
               </div>
 
@@ -162,7 +178,9 @@ export default function RegisterPage() {
                 </p>
                 <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold leading-tight">
                   Start investing with{" "}
-                  <span className="text-accentGold">ApexGlobalEarnings.</span>
+                  <span className="text-accentGold">
+                    ApexGlobalEarnings.
+                  </span>
                 </h1>
                 <p className="text-sm sm:text-base text-gray-300/90 max-w-xl">
                   Open a live account to access multi-asset markets, structured
@@ -206,27 +224,31 @@ export default function RegisterPage() {
               <ul className="space-y-2 text-xs sm:text-sm text-gray-300/90 max-w-lg">
                 <li className="flex items-start gap-2">
                   <span className="mt-[6px] h-1.5 w-1.5 rounded-full bg-accentGreen" />
-                  <span>Access crypto, indices, metals and FX from one platform.</span>
+                  <span>
+                    Access crypto, indices, metals and FX from one platform.
+                  </span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="mt-[6px] h-1.5 w-1.5 rounded-full bg-accentGold" />
                   <span>
-                    Enrol in clear investment plans with defined minimums, ROI and duration.
+                    Enrol in clear investment plans with defined minimums, ROI
+                    and duration.
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="mt-[6px] h-1.5 w-1.5 rounded-full bg-accentGreen" />
                   <span>
-                    Unlock referral tools to earn from Level 1 &amp; Level 2 networks
-                    as your community grows.
+                    Unlock referral tools to earn from Level 1 &amp; Level 2
+                    networks as your community grows.
                   </span>
                 </li>
               </ul>
 
               <p className="text-[10px] sm:text-[11px] text-gray-500/95 max-w-xl">
-                Trading and investing involve risk. ApexGlobalEarnings does not provide
-                personalised investment advice. Only invest what you can afford to
-                allocate based on your own objectives and risk tolerance.
+                Trading and investing involve risk. ApexGlobalEarnings does not
+                provide personalised investment advice. Only invest what you can
+                afford to allocate based on your own objectives and risk
+                tolerance.
               </p>
             </div>
 
@@ -237,9 +259,9 @@ export default function RegisterPage() {
                   Create your ApexGlobalEarnings account
                 </h2>
                 <p className="text-[11px] sm:text-xs text-gray-400 mb-4">
-                  Complete the form below to get started. You can fund your account,
-                  select an investment plan and activate your referral link after you
-                  sign in.
+                  Complete the form below to get started. You can fund your
+                  account, select an investment plan and activate your referral
+                  link after you sign in.
                 </p>
 
                 <form onSubmit={handleSubmit} className="space-y-4" noValidate>
@@ -327,14 +349,17 @@ export default function RegisterPage() {
                       />
                     </div>
                     <p className="text-[10px] text-gray-500">
-                      Use at least 8 characters, including numbers and symbols where
-                      possible.
+                      Use at least 8 characters, including numbers and symbols
+                      where possible.
                     </p>
                   </div>
 
                   {/* Confirm password */}
                   <div className="flex flex-col gap-1.5">
-                    <label htmlFor="confirmPassword" className="text-gray-300/90">
+                    <label
+                      htmlFor="confirmPassword"
+                      className="text-gray-300/90"
+                    >
                       Confirm password
                     </label>
                     <div className="relative">
@@ -360,6 +385,7 @@ export default function RegisterPage() {
                       Referral code (optional)
                     </label>
                     <input
+                      key={refFromUrl} // ✅ ensures defaultValue updates after mount
                       id="referralCode"
                       name="referralCode"
                       type="text"
@@ -369,8 +395,8 @@ export default function RegisterPage() {
                     />
 
                     <p className="text-[10px] text-gray-500">
-                      If you join through a partner, entering their code ensures they
-                      receive the correct commission.
+                      If you join through a partner, entering their code ensures
+                      they receive the correct commission.
                     </p>
                   </div>
 
@@ -387,8 +413,8 @@ export default function RegisterPage() {
                       htmlFor="terms"
                       className="text-[11px] sm:text-xs text-gray-300/90"
                     >
-                      I confirm that I am opening this account for myself, I have
-                      read and agree to the{" "}
+                      I confirm that I am opening this account for myself, I
+                      have read and agree to the{" "}
                       <Link
                         href="/terms"
                         className="text-accentGold hover:text-yellow-300 cursor-pointer"
