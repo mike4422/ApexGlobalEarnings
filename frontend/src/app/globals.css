@@ -1,0 +1,332 @@
+/* -----------------------------------------------------
+   Load Tailwind Core (Tailwind v4)
+----------------------------------------------------- */
+@import "tailwindcss";
+
+/* -----------------------------------------------------
+   CSS Variables (ApexGlobalEarnings Theme)
+----------------------------------------------------- */
+
+:root {
+  --background: #050816;
+  --background-alt: #0b1020;
+  --surface: #0d1224;
+  --foreground: #ffffff;
+
+  --accent-gold: #f7b500;
+  --accent-green: #00ff85;
+
+  --text-muted: #9ca3af;
+  --border-subtle: #1f283d;
+
+  --radius-base: 0.75rem;
+}
+
+/* -----------------------------------------------------
+   Base Elements
+----------------------------------------------------- */
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  /* background-color: var(--background); */
+  color: var(--foreground);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  scroll-behavior: smooth;
+}
+
+/* Predictable box sizing */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* -----------------------------------------------------
+   Scrollbar Styling (Premium UI)
+----------------------------------------------------- */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent-gold);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ffcc3d;
+}
+
+/* -----------------------------------------------------
+   Utility Background Classes (matching Tailwind palette)
+----------------------------------------------------- */
+
+.bg-bg {
+  background-color: var(--background) !important;
+}
+
+.bg-bgAlt {
+  background-color: var(--background-alt) !important;
+}
+
+.bg-surface {
+  background-color: var(--surface) !important;
+}
+
+.bg-accentGold {
+  background-color: var(--accent-gold) !important;
+}
+
+.bg-accentGreen {
+  background-color: var(--accent-green) !important;
+}
+
+/* Transparent glow helpers */
+.bg-accentGold\/10 {
+  background-color: rgba(247, 181, 0, 0.1) !important;
+}
+
+.bg-accentGreen\/10 {
+  background-color: rgba(0, 255, 133, 0.1) !important;
+}
+
+/* -----------------------------------------------------
+   Text Colors
+----------------------------------------------------- */
+
+.text-accentGold {
+  color: var(--accent-gold) !important;
+}
+
+.text-accentGreen {
+  color: var(--accent-green) !important;
+}
+
+.text-muted {
+  color: var(--text-muted) !important;
+}
+
+/* -----------------------------------------------------
+   Border Utilities
+----------------------------------------------------- */
+
+.border-accentGold {
+  border-color: var(--accent-gold) !important;
+}
+
+.border-accentGreen {
+  border-color: var(--accent-green) !important;
+}
+
+.border-subtle {
+  border-color: var(--border-subtle) !important;
+}
+
+/* -----------------------------------------------------
+   Card Shadow + Glow (Premium Fintech Style)
+----------------------------------------------------- */
+
+.card-glow {
+  background: var(--surface);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-base);
+  box-shadow: 0px 0px 20px rgba(247, 181, 0, 0.07);
+}
+
+/* Soft shadow for components */
+.soft-shadow {
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+/* Hover lift effect */
+.hover-lift {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* -----------------------------------------------------
+   Gradient Utilities (hero, buttons, highlights)
+----------------------------------------------------- */
+
+.gradient-gold {
+  background: linear-gradient(90deg, #f7b500, #ffd465);
+}
+
+.gradient-green {
+  background: linear-gradient(90deg, #00ff85, #52ffbd);
+}
+
+.gradient-dark {
+  background: linear-gradient(180deg, #050816 0%, #0b1020 100%);
+}
+
+/* Neon border glow */
+.neon-gold {
+  box-shadow: 0 0 10px rgba(247, 181, 0, 0.6), 0 0 20px rgba(247, 181, 0, 0.3);
+}
+
+.neon-green {
+  box-shadow: 0 0 10px rgba(0, 255, 133, 0.6), 0 0 20px rgba(0, 255, 133, 0.3);
+}
+
+/* -----------------------------------------------------
+   Ticker Animation (used in Live Prices)
+----------------------------------------------------- */
+
+@keyframes ticker {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+/* Utility class for infinite scrolling ticker */
+.ticker-scroll {
+  display: inline-block;
+  white-space: nowrap;
+  animation: ticker 35s linear infinite;
+}
+
+/* -----------------------------------------------------
+   Fade & slide animations for hero, sections, cards
+----------------------------------------------------- */
+
+.fade-in {
+  animation: fadeIn 0.7s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slide-up {
+  animation: slideUp 0.6s ease-out forwards;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0px);
+    opacity: 1;
+  }
+}
+
+/* -----------------------------------------------------
+   Button Styles (Reusable System)
+----------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.55rem 1.2rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: var(--radius-base);
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background-color: var(--accent-gold);
+  color: #000;
+}
+
+.btn-primary:hover {
+  background-color: #ffcc3d;
+}
+
+.btn-outline {
+  border: 1px solid var(--accent-gold);
+  color: var(--accent-gold);
+}
+
+.btn-outline:hover {
+  background: rgba(247, 181, 0, 0.1);
+}
+
+/* -----------------------------------------------------
+   Blur + Glass Effects (Hero, Navbar)
+----------------------------------------------------- */
+
+.glass {
+  backdrop-filter: blur(14px);
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Global horizontal padding for all content (except navbar) */
+.page-padding {
+  padding-left: 1.5rem;  /* 24px */
+  padding-right: 1.5rem;
+}
+
+/* Tablet */
+@media (min-width: 640px) {
+  .page-padding {
+    padding-left: 2rem;  /* 32px */
+    padding-right: 2rem;
+  }
+}
+
+/* Desktop - keep layout tight */
+@media (min-width: 1024px) {
+  .page-padding {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+/* Live ticker marquee animation */
+@keyframes ticker-marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.ticker-track {
+  animation: ticker-marquee 28s linear infinite;
+  will-change: transform;
+}
+
+
+/* Testimonials marquee animation */
+@keyframes testimonials-marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.testimonials-track {
+  animation: testimonials-marquee 40s linear infinite;
+  will-change: transform;
+}
