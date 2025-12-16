@@ -1,15 +1,18 @@
 import nodemailer, { SendMailOptions } from "nodemailer";
+import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { env } from "../config/env";
 
 const transporter = nodemailer.createTransport({
   host: env.SMTP_HOST,
-  port: env.SMTP_PORT,
-  secure: env.SMTP_SECURE, // boolean in your env.ts
+  port: Number(env.SMTP_PORT),
+  secure:
+    String(process.env.SMTP_SECURE || "").toLowerCase() === "true" ||
+    Number(env.SMTP_PORT) === 465,
   auth: {
     user: env.SMTP_USER,
     pass: env.SMTP_PASS,
   },
-});
+} as SMTPTransport.Options);
 
 export type SendMailResult = {
   success: boolean;
@@ -26,7 +29,7 @@ export async function sendMail(
       ...options,
     });
 
-    if (env.NODE_ENV !== "production") {
+    if (process.env.NODE_ENV !== "production") {
       console.log("[MAIL] sent:", info.messageId);
     }
 

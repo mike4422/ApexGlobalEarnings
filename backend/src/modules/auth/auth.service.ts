@@ -1,19 +1,20 @@
 import { prisma } from "../../config/prisma";
 import { env } from "../../config/env";
 import { sendMail, SendMailResult } from "../../utils/email";
+import crypto from "crypto";
+
 // import your User type if you have it in a model file
 
 export async function createEmailVerificationToken(userId: string) {
-  // if you already have a model/table for email verification tokens, reuse it.
-  // Example simple token using cuid:
-  const token = crypto.randomUUID(); // or cuid()
-  
-  // Store token in a table, or in User if you designed it that way
-  await prisma.emailVerificationToken.create({
+  // Example simple token using uuid:
+  const token = crypto.randomUUID();
+
+  // Store token directly on User (matches your schema)
+  await prisma.user.update({
+    where: { id: userId },
     data: {
-      userId,
-      token,
-      // expiresAt: add(new Date(), { hours: 24 }),
+      emailVerificationToken: token,
+      emailVerificationExpiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
     },
   });
 
@@ -24,7 +25,7 @@ export async function sendVerificationEmail(
   user: { id: string; email: string; name?: string | null; username: string },
   token: string
 ): Promise<SendMailResult> {
-  const verifyUrl = `${env.APP_URL}/verify-email?token=${encodeURIComponent(
+  const verifyUrl = `${env.CLIENT_URL}/verify-email?token=${encodeURIComponent(
     token
   )}`;
 

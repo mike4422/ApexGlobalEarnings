@@ -345,12 +345,12 @@ export async function updateProfile(req: AuthRequest, res: Response) {
     const userId = req.user!.id;
     const { name, username } = req.body as { name?: string; username?: string };
 
+    // ✅ FIX: never return null (Prisma does not allow null here)
     const clean = (v: any) => {
       if (v === undefined) return undefined;
-      if (v === null) return null;
       if (typeof v !== "string") return undefined;
       const t = v.trim();
-      return t.length ? t : null;
+      return t.length ? t : undefined;
     };
 
     const nextName = clean(name);
@@ -366,8 +366,10 @@ export async function updateProfile(req: AuthRequest, res: Response) {
 
     // If username changes, enforce uniqueness
     if (nextUsername && nextUsername !== current.username) {
-      if (String(nextUsername).length < 3) {
-        return res.status(400).json({ error: "Username must be at least 3 characters" });
+      if (nextUsername.length < 3) {
+        return res
+          .status(400)
+          .json({ error: "Username must be at least 3 characters" });
       }
 
       const exists = await prisma.user.findUnique({
@@ -375,7 +377,9 @@ export async function updateProfile(req: AuthRequest, res: Response) {
         select: { id: true },
       });
 
-      if (exists) return res.status(409).json({ error: "Username already in use" });
+      if (exists) {
+        return res.status(409).json({ error: "Username already in use" });
+      }
     }
 
     const updated = await prisma.user.update({
@@ -402,6 +406,7 @@ export async function updateProfile(req: AuthRequest, res: Response) {
     return res.status(500).json({ error: "Internal server error" });
   }
 }
+
 
 // POST /api/auth/change-password
 export async function changePassword(req: AuthRequest, res: Response) {

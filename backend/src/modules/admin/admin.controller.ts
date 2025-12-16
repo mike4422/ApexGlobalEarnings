@@ -3,6 +3,8 @@ import { prisma } from "../../config/prisma";
 import { sendMail } from "../../utils/email";
 import { AuthRequest } from "../../middleware/auth";
 import { WalletNetwork, AssetSymbol } from "@prisma/client";
+import bcrypt from "bcryptjs";
+
 
 export async function listDepositRequests(req: Request, res: Response) {
   const status = (req.query.status as string) || "PENDING";
