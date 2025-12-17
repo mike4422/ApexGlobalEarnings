@@ -68,6 +68,12 @@ export default function DashboardTopbar({
 
   const [unreadCount, setUnreadCount] = useState<number>(0);
 
+  // ✅ NEW: popup (toast) state
+  const [notifToastOpen, setNotifToastOpen] = useState(false);
+  const [notifToastText, setNotifToastText] = useState("");
+  const lastUnreadRef = useRef<number>(0);
+  const toastTimerRef = useRef<number | null>(null);
+
   async function fetchUnread() {
     try {
       const token =
@@ -75,7 +81,34 @@ export default function DashboardTopbar({
       if (!token) return;
 
       const data = await apiFetch("/api/notifications/unread-count", {}, token);
-      setUnreadCount(Number(data?.unreadCount ?? 0));
+      const newCount = Number(data?.unreadCount ?? 0);
+
+      // ✅ NEW: detect increases and show popup
+      const prev = lastUnreadRef.current;
+
+      setUnreadCount(newCount);
+
+      // Do not toast on very first load (when prev is 0 and we haven't set baseline yet)
+      if (prev !== 0 && newCount > prev) {
+        const delta = newCount - prev;
+        setNotifToastText(
+          delta === 1 ? "You have 1 new notification." : `You have ${delta} new notifications.`
+        );
+        setNotifToastOpen(true);
+
+        if (toastTimerRef.current) window.clearTimeout(toastTimerRef.current);
+        toastTimerRef.current = window.setTimeout(() => {
+          setNotifToastOpen(false);
+        }, 6000);
+      }
+
+      // Keep baseline updated
+      if (prev === 0) {
+        // first successful fetch sets baseline without toasting
+        lastUnreadRef.current = newCount;
+      } else {
+        lastUnreadRef.current = newCount;
+      }
     } catch (e) {
       // silent fail (do not break topbar)
     }
@@ -96,6 +129,9 @@ export default function DashboardTopbar({
       window.removeEventListener("apex:notifications:changed", onChanged as any);
       window.removeEventListener("notifications:changed", onChanged as any);
       window.clearInterval(t);
+
+      // ✅ NEW: cleanup toast timer
+      if (toastTimerRef.current) window.clearTimeout(toastTimerRef.current);
     };
   }, []);
 
@@ -146,19 +182,46 @@ export default function DashboardTopbar({
           {/* Right actions */}
           <div className="flex items-center gap-2 sm:gap-3">
             {/* Notification placeholder */}
-            <Link
-              href="/dashboard/notifications"
-              className="inline-flex relative items-center justify-center rounded-lg border border-gray-800 bg-black/70 p-1.5 text-gray-300 hover:border-accentGold hover:text-accentGold transition"
-              aria-label="Notifications"
-            >
-              <Bell className="h-4 w-4" />
+            <div className="relative">
+              <Link
+                href="/dashboard/notifications"
+                className="inline-flex relative items-center justify-center rounded-lg border border-gray-800 bg-black/70 p-1.5 text-gray-300 hover:border-accentGold hover:text-accentGold transition"
+                aria-label="Notifications"
+                onClick={() => setNotifToastOpen(false)}
+              >
+                <Bell className="h-4 w-4" />
 
-              {unreadCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-accentGold text-black text-[10px] font-bold flex items-center justify-center border border-black/60">
-                  +{unreadCount}
-                </span>
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-accentGold text-black text-[10px] font-bold flex items-center justify-center border border-black/60">
+                    +{unreadCount}
+                  </span>
+                )}
+              </Link>
+
+              {/* ✅ NEW: popup toast */}
+              {notifToastOpen && (
+                <div className="absolute right-0 mt-2 w-[260px] rounded-xl border border-gray-800 bg-black/95 shadow-xl shadow-black/60 p-3 text-xs z-50">
+                  <p className="text-gray-100 font-medium mb-1">New notification</p>
+                  <p className="text-gray-400">{notifToastText}</p>
+                  <div className="mt-3 flex items-center justify-between">
+                    <Link
+                      href="/dashboard/notifications"
+                      className="text-accentGold hover:underline"
+                      onClick={() => setNotifToastOpen(false)}
+                    >
+                      View
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => setNotifToastOpen(false)}
+                      className="text-gray-500 hover:text-gray-300 transition"
+                    >
+                      Dismiss
+                    </button>
+                  </div>
+                </div>
               )}
-            </Link>
+            </div>
 
             {/* Theme toggle */}
             <button
