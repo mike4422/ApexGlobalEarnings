@@ -35,7 +35,7 @@ export default function SupportPage() {
   // Example formats often look like:
   //   https://embed.tawk.to/XXXXXXXX/1XXXXXXX
   // Keep it as a full URL string.
-  const TALKTO_WIDGET_SRC = "https://embed.tawk.to/694265f5131715197aa70c78/1jcllsiap";
+  const TALKTO_WIDGET_SRC = "https://embed.tawk.to/69427594e999ab1981c83799/1jclpmjqf";
 
   const supportIdentity = useMemo(() => {
     const name = me?.name || me?.username || "Investor";
@@ -176,8 +176,8 @@ export default function SupportPage() {
           <div>
             <div className="font-semibold">Live chat is enabled.</div>
             <div className="text-emerald-100/80">
-              If the widget does not appear, confirm your script URL and domain
-              allowlist settings in Talk.to/Tawk.to.
+              {/* If the widget does not appear, confirm your script URL and domain
+              allowlist settings in Talk.to/Tawk.to. */}
             </div>
           </div>
         </div>
