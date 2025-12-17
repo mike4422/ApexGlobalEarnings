@@ -148,7 +148,7 @@ export default function DashboardTopbar({
             {/* Notification placeholder */}
             <Link
               href="/dashboard/notifications"
-              className="hidden sm:inline-flex relative items-center justify-center rounded-lg border border-gray-800 bg-black/70 p-1.5 text-gray-300 hover:border-accentGold hover:text-accentGold transition"
+              className="inline-flex relative items-center justify-center rounded-lg border border-gray-800 bg-black/70 p-1.5 text-gray-300 hover:border-accentGold hover:text-accentGold transition"
               aria-label="Notifications"
             >
               <Bell className="h-4 w-4" />
