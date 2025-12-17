@@ -5,6 +5,8 @@ import { usePathname } from "next/navigation";
 import MainNavbar from "@/components/layout/MainNavbar";
 import { Footer } from "@/components/layout/Footer";
 import RobotGate from "@/components/security/RobotGate";
+import CookieBanner from "@/components/common/CookieBanner";
+
 
 type Props = {
   children: ReactNode;
@@ -26,6 +28,7 @@ export default function RootShell({ children }: Props) {
         <RobotGate />
         <MainNavbar />
         <main className="flex-1">{children}</main>
+        <CookieBanner />
         <Footer />
       </div>
     );
