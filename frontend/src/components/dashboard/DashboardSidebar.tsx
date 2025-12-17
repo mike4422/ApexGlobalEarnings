@@ -254,16 +254,16 @@ export default function DashboardSidebar({
 
       {/* Mobile sidebar (overlay) */}
       {open && (
-        <div className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden">
-          <div className="absolute inset-y-0 left-0 w-64 max-w-[80%]">
+        <div
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
+          onClick={onClose}
+        >
+          <div
+            className="absolute inset-y-0 left-0 w-64 max-w-[80%]"
+            onClick={(e) => e.stopPropagation()}
+          >
             {content}
           </div>
-          <button
-            type="button"
-            className="absolute inset-0 w-full h-full"
-            onClick={onClose}
-            aria-label="Close sidebar overlay"
-          />
         </div>
       )}
     </>
