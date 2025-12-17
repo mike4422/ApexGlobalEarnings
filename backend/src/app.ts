@@ -18,7 +18,7 @@ import withdrawalRouter from "./modules/withdrawal/withdrawal.routes";
 import referralRoutes from "./routes/referralRoutes";
 import securityRoutes from "./routes/securityRoutes";
 import notificationsRoutes from "./routes/notificationRoutes";
-// import turnstileRouter from "./modules/security/turnstile.routes";
+import turnstileRouter from "./modules/security/turnstile.routes";
 
 
 
@@ -49,7 +49,7 @@ app.use("/api/withdrawals", withdrawalRouter);
 app.use("/api/referrals", referralRoutes);
 app.use("/api/security", securityRoutes);
 app.use("/api/notifications", notificationsRoutes);
-// app.use("/api/security", turnstileRouter);
+app.use("/api/security", turnstileRouter);
 
 
 // error

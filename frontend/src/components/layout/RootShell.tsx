@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import MainNavbar from "@/components/layout/MainNavbar";
 import { Footer } from "@/components/layout/Footer";
-// import RobotGate from "@/components/security/RobotGate";
+import RobotGate from "@/components/security/RobotGate";
 
 type Props = {
   children: ReactNode;
@@ -23,7 +23,7 @@ export default function RootShell({ children }: Props) {
   if (!isDashboard) {
     return (
       <div className="bg-bg min-h-screen flex flex-col">
-        {/* <RobotGate /> */}
+        <RobotGate />
         <MainNavbar />
         <main className="flex-1">{children}</main>
         <Footer />
@@ -34,7 +34,7 @@ export default function RootShell({ children }: Props) {
   // 📊 Dashboard pages – clean shell, no navbar/footer, background handled by dashboard layout
   return (
     <div className="min-h-screen">
-      {/* <RobotGate /> */}
+      <RobotGate />
       {children}
     </div>
   );
