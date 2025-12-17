@@ -13,7 +13,7 @@ export const env = {
     .split(',')
     .map((o) => o.trim())
     .filter(Boolean),
-  TURNSTILE_SECRET_KEY: process.env.TURNSTILE_SECRET_KEY!,
+  // TURNSTILE_SECRET_KEY: process.env.TURNSTILE_SECRET_KEY!,
 
   SMTP_HOST: process.env.SMTP_HOST!,
 SMTP_PORT: process.env.SMTP_PORT || "587",
