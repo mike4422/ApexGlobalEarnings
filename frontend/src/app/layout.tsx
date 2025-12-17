@@ -2,6 +2,8 @@ import "./globals.css";
 import { ReactNode } from "react";
 import RootShell from "@/components/layout/RootShell";
 import Script from "next/script";
+import CookieBanner from "@/components/common/CookieBanner";
+
 
 export const metadata = {
   title: "ApexGlobalEarnings | Smart Trading & Investment",
@@ -14,7 +16,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       {/* ❗ No bg-bg here anymore – each shell controls its own background */}
       <body className="antialiased">
         <RootShell>{children}</RootShell>
-
+        <CookieBanner />
         {/*Start of Tawk.to Script*/}
         <Script id="tawk-to" strategy="afterInteractive">
           {`
