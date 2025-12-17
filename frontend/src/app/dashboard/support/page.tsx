@@ -35,7 +35,7 @@ export default function SupportPage() {
   // Example formats often look like:
   //   https://embed.tawk.to/XXXXXXXX/1XXXXXXX
   // Keep it as a full URL string.
-  const TALKTO_WIDGET_SRC = "";
+  const TALKTO_WIDGET_SRC = "https://embed.tawk.to/694265f5131715197aa70c78/1jcllsiap";
 
   const supportIdentity = useMemo(() => {
     const name = me?.name || me?.username || "Investor";
@@ -79,6 +79,10 @@ export default function SupportPage() {
       'script[data-talkto="true"]'
     );
     if (existing) return;
+
+    // ✅ Match Tawk.to snippet globals
+    (window as any).Tawk_API = (window as any).Tawk_API || {};
+    (window as any).Tawk_LoadStart = new Date();
 
     const s = document.createElement("script");
     s.async = true;
