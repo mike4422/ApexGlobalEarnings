@@ -265,7 +265,7 @@ export default function DashboardPage() {
               description="Top up your balance in USDT, BTC or other supported assets."
             />
             <QuickLink
-              href="/dashboard/withdrawals"
+              href="/dashboard/withdraw"
               title="Request payout"
               description="Move available profits to your preferred wallet."
             />
