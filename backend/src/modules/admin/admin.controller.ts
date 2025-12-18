@@ -479,7 +479,7 @@ export async function approveWithdrawalRequest(req: AuthRequest, res: Response) 
       subject: "Withdrawal approved — ApexGlobalEarnings",
       html: `
         <p>Hi ${w.user.name || w.user.username || "Investor"},</p>
-        <p>Your withdrawal request has been <strong>approved</strong>.</p>
+        <p>Your withdrawal request has been <strong>processed</strong>.</p>
         <p><strong>Amount:</strong> $${(w.amountCents / 100).toLocaleString()} (${w.asset}${network ? ` / ${network}` : ""})</p>
         <p><strong>Destination:</strong> ${address}</p>
         <p>If you have any questions, please contact support.</p>
