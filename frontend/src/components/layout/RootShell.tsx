@@ -6,6 +6,8 @@ import MainNavbar from "@/components/layout/MainNavbar";
 import { Footer } from "@/components/layout/Footer";
 import RobotGate from "@/components/security/RobotGate";
 import CookieBanner from "@/components/common/CookieBanner";
+import DemoWithdrawalToast from "@/components/marketing/DemoWithdrawalToast";
+
 
 
 type Props = {
@@ -25,6 +27,7 @@ export default function RootShell({ children }: Props) {
   if (!isDashboard) {
     return (
       <div className="bg-bg min-h-screen flex flex-col">
+        <DemoWithdrawalToast />
         <RobotGate />
         <MainNavbar />
         <main className="flex-1">{children}</main>
@@ -37,6 +40,7 @@ export default function RootShell({ children }: Props) {
   // 📊 Dashboard pages – clean shell, no navbar/footer, background handled by dashboard layout
   return (
     <div className="min-h-screen">
+      <DemoWithdrawalToast />
       <RobotGate />
       {children}
     </div>
