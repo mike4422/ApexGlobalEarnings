@@ -157,12 +157,18 @@ export async function createInvestment(req: AuthRequest, res: Response) {
         },
       });
 
+      const endDate =
+      plan.durationDays
+        ? new Date(Date.now() + plan.durationDays * 24 * 60 * 60 * 1000)
+        : null;
+
       const created = await tx.investment.create({
         data: {
           userId: user.id,
           planId: plan.id,
           amountCents,
           status: "ACTIVE",
+          endDate,
         },
         include: {
           plan: {

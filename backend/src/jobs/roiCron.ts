@@ -15,6 +15,10 @@ export async function runDailyRoiAccrual() {
   });
 
   for (const inv of active) {
+
+     // 🛡️ Safety guard (prevents double-processing in edge cases)
+    if (inv.status === "COMPLETED") continue;
+
     const last = inv.lastRoiAccruedAt ?? inv.startDate;
     const days = Math.floor(
       (now.getTime() - last.getTime()) / (1000 * 60 * 60 * 24)
@@ -35,16 +39,22 @@ export async function runDailyRoiAccrual() {
         data: {
           accruedReturnCents: { increment: totalProfitCents },
           lastRoiAccruedAt: now,
-          status: willComplete ? 'COMPLETED' : 'ACTIVE',
+          status: willComplete ? "COMPLETED" : "ACTIVE",
+          endDate: willComplete ? inv.endDate : inv.endDate, // keep consistent
         },
       }),
-      prisma.user.update({
-        where: { id: inv.userId },
-        data: {
-          // 🔸 Only profit is credited to balance; capital stays allocated
-          balanceCents: { increment: totalProfitCents },
+
+     prisma.user.update({
+      where: { id: inv.userId },
+      data: {
+        balanceCents: {
+          increment: willComplete
+            ? inv.amountCents + totalProfitCents // ✅ capital + profit
+            : totalProfitCents,                 // daily accrual
         },
-      }),
+      },
+    }),
+
       prisma.transaction.create({
         data: {
           userId: inv.userId,
